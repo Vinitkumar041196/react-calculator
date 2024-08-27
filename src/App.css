@@ -1,0 +1,58 @@
+* {
+    font-family: sans-serif;
+}
+input,
+button {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+input {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+form {
+    width: 90%;
+    height: 50%;
+}
+
+.display{
+    display: flex;
+    flex-direction: column;
+}
+
+.operators{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.reset{
+    display: flex;
+    gap: 0.5rem;
+}
+
+.section {
+    display: flex;
+    gap: 0.5rem;
+}
+
+button {
+    flex: 1;
+    width: 10%;
+    border: 1px solid gray;
+    background: whitesmoke;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    flex: 1;
+    text-align: right;
+    font-size: 2rem;
+}
+/* button:nth-last-child(2), */
+/* button:nth-last-child(1) { */
+    /* background: tomato; */
+    /* color: white; */
+/* } */
