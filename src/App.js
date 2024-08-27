@@ -4,6 +4,20 @@ import {
 } from "react";
 import "./App.css";
 
+function Button(props){
+    return (<button onClick={props.func}>{props.text}</button>)
+}
+
+function Display(props){
+  return (
+    <div className="display">
+      <p>{props.op}</p>
+      <p>{props.res} =</p>
+      <input pattern="[0-9]" ref={props.inref} type="number" placeholder="Type a number" />
+    </div>
+  );
+}
+
 function App() {
   const inputRef = useRef(null);
   const [result, setResult] = useState(0);
@@ -32,9 +46,8 @@ function App() {
     if (operator === ''){ 
       setOperation(inputRef.current.value);
     }else{
-      setOperation(operation +" "+ inputRef.current.value);
+      setOperation(result + " " + operator + " " + inputRef.current.value);
     }
-
   };
 
   function handlePointClick(e) {
@@ -45,10 +58,8 @@ function App() {
   function handleOperatorClick(e) {
     e.preventDefault();
     setOperator(e.target.innerHTML);
-    if (result <= 0) {
-      setResult(Number(inputRef.current.value));
-    }
-    setOperation(operation+" "+e.target.innerHTML);
+    setResult(Number(inputRef.current.value));
+    setOperation(operation + " " + e.target.innerHTML + " " );
     inputRef.current.value = null;
   };
 
@@ -73,13 +84,16 @@ function App() {
       case "/":
         res = result / Number(inputRef.current.value);
         break;
+      case '':
+        res = Number(inputRef.current.value);
+        break;
       default:
         alert("select an operator to proceed");
         return;
     }
     setResult(res);
     setOperation(res);
-    inputRef.current.value = null;
+    inputRef.current.value = res;
   };
 
 
@@ -89,42 +103,38 @@ function App() {
         <h1>Simplest Working Calculator</h1>
       </div>
       <form>
-        <div className="display">
-          <p>{operation}</p>
-          <p>{result} =</p>
-          <input pattern="[0-9]" ref={inputRef} type="number" placeholder="Type a number" />
-        </div>
+        <Display op={operation} res={result} inref={inputRef} />
         <div className="numpad section">
         </div>
         <div className="numpad section">
-          <button onClick={handleNumberClick}>7</button>
-          <button onClick={handleNumberClick}>8</button>
-          <button onClick={handleNumberClick}>9</button>
-          <button onClick={handleOperatorClick}>+</button>
+          <Button func={handleNumberClick} text="7"/>
+          <Button func={handleNumberClick} text="8"/>
+          <Button func={handleNumberClick} text="9"/>
+          <Button func={handleOperatorClick} text="+"/>
         </div>
         <div className="numpad section">
-          <button onClick={handleNumberClick}>4</button>
-          <button onClick={handleNumberClick}>5</button>
-          <button onClick={handleNumberClick}>6</button>
-          <button onClick={handleOperatorClick}>-</button>
+          <Button func={handleNumberClick} text="4"/>
+          <Button func={handleNumberClick} text="5"/>
+          <Button func={handleNumberClick} text="6"/>
+          <Button func={handleOperatorClick} text="-"/>
         </div>
         <div className="numpad section">
-          <button onClick={handleNumberClick}>1</button>
-          <button onClick={handleNumberClick}>2</button>
-          <button onClick={handleNumberClick}>3</button>
-          <button onClick={handleOperatorClick}>*</button>
+          <Button func={handleNumberClick} text="1"/>
+          <Button func={handleNumberClick} text="2"/>
+          <Button func={handleNumberClick} text="3"/>
+          <Button func={handleOperatorClick} text="*"/>
         </div>
         <div className="numpad section">
-          <button onClick={handleNumberClick}>0</button>
-          <button onClick={handlePointClick}>.</button>
-          <button onClick={handleEqualsClick}>=</button>
-          <button onClick={handleOperatorClick}>/</button>
+          <Button func={handleNumberClick} text="0"/>
+          <Button func={handlePointClick} text="."/>
+          <Button func={handleEqualsClick} text="="/>
+          <Button func={handleOperatorClick} text="/"/>
         </div>
         <div className="operators">
         </div>
         <div className="reset">
-          <button onClick={resetInput}>Clear</button>
-          <button onClick={resetResult}>Reset</button>
+          <Button func={resetInput} text="Clear"/>
+          <Button func={resetResult} text="Reset"/>
         </div>
       </form>
     </div>
