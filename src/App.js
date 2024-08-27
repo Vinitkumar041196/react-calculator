@@ -8,10 +8,24 @@ function Button(props){
     return (<button onClick={props.func}>{props.text}</button>)
 }
 
+function History(props){
+  const histOps = props.opArr.map((op,i) => {
+    return (
+        <li key={String(i+1)}>{op}</li>
+    );
+  });
+  return (
+    <div>History:<br/>
+      <ul className="opHist">
+        {histOps}
+      </ul>
+    </div>
+  );
+}
+
 function Display(props){
   return (
     <div className="display">
-      <label className="smalltext">{props.op}</label>
       <p>{props.res} =</p>
       <input pattern="[0-9]" ref={props.inref} type="number" placeholder="Type a number" />
     </div>
@@ -22,10 +36,10 @@ function App() {
   const inputRef = useRef(null);
   const [result, setResult] = useState('');
   const [operator, setOperator] = useState('');
-  const [operation, setOperation] = useState('');
+  const [operationHist, setOperationHist] = useState(['']);
   let pointClicked = false;
   
-  function getOperation(op, curInVal, res, finalRes){
+  function setOperationLog(op, curInVal, res, finalRes){
     op = op===undefined ? operator : op;
     curInVal = curInVal===undefined ? inputRef.current.value : curInVal;
     res = res===undefined ? result : res;
@@ -35,9 +49,14 @@ function App() {
     res = op==='' ? '' : res;
     
     if (res===''){
-      return `${curInVal} ${op}`
+      operationHist[operationHist.length-1]=`${curInVal} ${op}`;
+    }else{
+      operationHist[operationHist.length-1]=`${res} ${op} ${curInVal} = ${finalRes}`;
     }
-    return `${res} ${op} ${curInVal} = ${finalRes}`
+    if (finalRes!==''){
+      operationHist.push('');
+    }
+    setOperationHist(operationHist);
   }
 
   function resetInput(e) {
@@ -58,7 +77,7 @@ function App() {
     } else {
       inputRef.current.value = inputRef.current.value + e.target.innerHTML;
     }
-    setOperation(getOperation());
+    setOperationLog();
   };
 
   function handlePointClick(e) {
@@ -70,7 +89,7 @@ function App() {
     e.preventDefault();
     setOperator(e.target.innerHTML);
     setResult(Number(inputRef.current.value));
-    setOperation(getOperation(e.target.innerHTML,Number(inputRef.current.value),''));
+    setOperationLog(e.target.innerHTML,Number(inputRef.current.value),'');
     inputRef.current.value = null;
   };
 
@@ -103,8 +122,8 @@ function App() {
         return;
     }
     setResult(res);
-    setOperation(getOperation(operator,undefined,undefined,res));
-    inputRef.current.value = res;
+    setOperationLog(operator,inputRef.current.value,result,res);
+    inputRef.current.value = null;
   };
 
 
@@ -114,7 +133,7 @@ function App() {
         <h1>Simplest Working Calculator</h1>
       </div>
       <form>
-        <Display op={operation} res={result} inref={inputRef} />
+        <Display res={result} inref={inputRef} />
         <div className="numpad section">
           <Button func={handleNumberClick} text="7"/>
           <Button func={handleNumberClick} text="8"/>
@@ -143,6 +162,7 @@ function App() {
           <Button func={resetInput} text="Clear"/>
           <Button func={resetResult} text="Reset"/>
         </div>
+        <History opArr={operationHist} />
       </form>
     </div>
   );
