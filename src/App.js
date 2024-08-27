@@ -26,7 +26,7 @@ function History(props){
 function Display(props){
   return (
     <div className="display">
-      <p>{props.res} =</p>
+      <p>{props.res}</p>
       <input pattern="[0-9]" ref={props.inref} type="number" placeholder="Type a number" />
     </div>
   );
@@ -39,14 +39,20 @@ function App() {
   const [operationHist, setOperationHist] = useState(['']);
   let pointClicked = false;
   
-  function setOperationLog(op, curInVal, res, finalRes){
+  function setOperationLog(caller,op, curInVal, res, finalRes){
+    console.log("caller",caller);
     op = op===undefined ? operator : op;
     curInVal = curInVal===undefined ? inputRef.current.value : curInVal;
     res = res===undefined ? result : res;
     finalRes = finalRes===undefined?'':finalRes;
 
     curInVal = curInVal===null ? '' : curInVal;
-    res = op==='' ? '' : res;
+    // res = finalRes === '' ? '' : res;
+    
+    console.log("curinval",curInVal);
+    console.log("op",op);
+    console.log("res",res);
+    console.log("finres",finalRes);
     
     if (res===''){
       operationHist[operationHist.length-1]=`${curInVal} ${op}`;
@@ -62,11 +68,14 @@ function App() {
   function resetInput(e) {
     e.preventDefault();
     inputRef.current.value = null;
+    operationHist[operationHist.length-1]='';
+    setOperationHist(operationHist);
   };
 
   function resetResult(e) {
     e.preventDefault();
     setResult('');
+    setOperationHist(['']);
   };
 
   function handleNumberClick(e) {
@@ -77,7 +86,7 @@ function App() {
     } else {
       inputRef.current.value = inputRef.current.value + e.target.innerHTML;
     }
-    setOperationLog();
+    setOperationLog('handleNumberClick');
   };
 
   function handlePointClick(e) {
@@ -88,9 +97,13 @@ function App() {
   function handleOperatorClick(e) {
     e.preventDefault();
     setOperator(e.target.innerHTML);
-    setResult(Number(inputRef.current.value));
-    setOperationLog(e.target.innerHTML,Number(inputRef.current.value),'');
-    inputRef.current.value = null;
+    if (inputRef.current.value !==''){
+      setResult(Number(inputRef.current.value));
+      setOperationLog('handleOperatorClick if', e.target.innerHTML, Number(inputRef.current.value), '');
+      inputRef.current.value = null;
+    }else{
+      setOperationLog('handleOperatorClick else', e.target.innerHTML);
+    }
   };
 
   function handleEqualsClick(e) {
@@ -122,7 +135,7 @@ function App() {
         return;
     }
     setResult(res);
-    setOperationLog(operator,inputRef.current.value,result,res);
+    setOperationLog('handleEqualsClick',operator,inputRef.current.value,result,res);
     inputRef.current.value = null;
   };
 
