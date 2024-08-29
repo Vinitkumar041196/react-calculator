@@ -1,36 +1,9 @@
-import {
-  useState,
-  useRef
-} from "react";
+import { useState, useRef } from "react";
+
 import "./App.css";
-
-function Button(props){
-    return (<button onClick={props.func}>{props.text}</button>)
-}
-
-function History(props){
-  const histOps = props.opArr.map((op,i) => {
-    return (
-        <li key={String(i+1)}>{op}</li>
-    );
-  });
-  return (
-    <div>History:<br/>
-      <ul className="opHist">
-        {histOps}
-      </ul>
-    </div>
-  );
-}
-
-function Display(props){
-  return (
-    <div className="display">
-      <p>{props.res}</p>
-      <input pattern="[0-9]" ref={props.inref} type="number" placeholder="Type a number" />
-    </div>
-  );
-}
+import Display from "./components/Display"
+import History from "./components/History";
+import Button from "./components/Button";
 
 function App() {
   const inputRef = useRef(null);
@@ -59,9 +32,11 @@ function App() {
     }else{
       operationHist[operationHist.length-1]=`${res} ${op} ${curInVal} = ${finalRes}`;
     }
+    
     if (finalRes!==''){
       operationHist.push('');
     }
+
     setOperationHist(operationHist);
   }
 
@@ -146,36 +121,39 @@ function App() {
         <h1>Simplest Working Calculator</h1>
       </div>
       <form>
-        <Display res={result} inref={inputRef} />
-        <div className="numpad section">
-          <Button func={handleNumberClick} text="7"/>
-          <Button func={handleNumberClick} text="8"/>
-          <Button func={handleNumberClick} text="9"/>
-          <Button func={handleOperatorClick} text="+"/>
-        </div>
-        <div className="numpad section">
-          <Button func={handleNumberClick} text="4"/>
-          <Button func={handleNumberClick} text="5"/>
-          <Button func={handleNumberClick} text="6"/>
-          <Button func={handleOperatorClick} text="-"/>
-        </div>
-        <div className="numpad section">
-          <Button func={handleNumberClick} text="1"/>
-          <Button func={handleNumberClick} text="2"/>
-          <Button func={handleNumberClick} text="3"/>
-          <Button func={handleOperatorClick} text="*"/>
-        </div>
-        <div className="numpad section">
-          <Button func={handleNumberClick} text="0"/>
-          <Button func={handlePointClick} text="."/>
-          <Button func={handleEqualsClick} text="="/>
-          <Button func={handleOperatorClick} text="/"/>
-        </div>
-        <div className="reset">
-          <Button func={resetInput} text="Clear"/>
-          <Button func={resetResult} text="Reset"/>
-        </div>
-        <History opArr={operationHist} />
+        <fieldset>
+          <Display res={result} inref={inputRef} />
+          <div className="numpad section">
+            <Button func={handleNumberClick} text="7"/>
+            <Button func={handleNumberClick} text="8"/>
+            <Button func={handleNumberClick} text="9"/>
+            <Button func={handleOperatorClick} text="+"/>
+          </div>
+          <div className="numpad section">
+            <Button func={handleNumberClick} text="4"/>
+            <Button func={handleNumberClick} text="5"/>
+            <Button func={handleNumberClick} text="6"/>
+            <Button func={handleOperatorClick} text="-"/>
+          </div>
+          <div className="numpad section">
+            <Button func={handleNumberClick} text="1"/>
+            <Button func={handleNumberClick} text="2"/>
+            <Button func={handleNumberClick} text="3"/>
+            <Button func={handleOperatorClick} text="*"/>
+          </div>
+          <div className="numpad section">
+            <Button func={handleNumberClick} text="0"/>
+            <Button func={handlePointClick} text="."/>
+            <Button func={handleEqualsClick} text="="/>
+            <Button func={handleOperatorClick} text="/"/>
+          </div>
+          <div className="reset">
+            <Button func={resetInput} text="Clear"/>
+            <Button func={resetResult} text="Reset"/>
+          </div>
+          <History opArr={operationHist} />
+        </fieldset>
+        
       </form>
     </div>
   );
