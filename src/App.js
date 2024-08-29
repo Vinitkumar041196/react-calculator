@@ -153,7 +153,6 @@ function App() {
           </div>
           <History opArr={operationHist} />
         </fieldset>
-        
       </form>
     </div>
   );
